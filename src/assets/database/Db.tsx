@@ -42,6 +42,25 @@ app.get('/leerExpedientes', (req, res) =>{
     res.json({ expedientes })
 })
 
+app.get('/leerVictimasDirectas', (req, res) => {
+    const query = 'SELECT * FROM victima_directa'
+    const victimasDirectas = db.prepare(query).all()
+    res.json({ victimasDirectas })
+})
+
+app.get('/leerVictimasDirectasPorExpediente', (req, res) => {
+    const idExpedienteInterno = req.query.idExpedienteInterno;
+    const query = 'SELECT * FROM victima_directa WHERE id_expediente_interno = ?';
+    const victimasDirectas = db.prepare(query).all(idExpedienteInterno);
+    res.json({ victimasDirectas })
+})
+
+app.get('/leerVictimasIndirectas', (req, res) => {
+    const query = 'SELECT * FROM victima_indirecta'
+    const victimasIndirectas = db.prepare(query).all()
+    res.json({ victimasIndirectas })
+})
+
 app.listen(port, () => {
     console.log(`App escuchando a través del puerto: ${port}`)
 })

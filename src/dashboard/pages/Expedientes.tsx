@@ -10,6 +10,23 @@ function Expedientes(){
 
     const width = window.innerWidth;
 
+    const convertirExpedientes = (data: any): Expediente[] => {
+        const expedientes: Expediente[] = data.map((d: any) => ({
+            idExpedienteInterno: d.id_expediente_interno,
+            causaPenal: d.causa_penal,
+            menoresVictimas: d.menores_victimas,
+            delito: d.delito,
+            fechaHechoVictimizante: d.fecha_hecho_victimizante,
+            fechaEntrega: d.fecha_entrega,
+            mpResponsable: d.mp_responsable,
+            distritoJudicial: d.distrito_judicial,
+            apoyosRecibidos: d.apoyos_recibidos,
+            calidadVictima: d.calidad_victima,
+            fud: d.fud
+        }));
+        return expedientes;
+    }
+
     const cargarMasExpedientes = () =>{
         if(cargando){
             return;
@@ -18,7 +35,8 @@ function Expedientes(){
         fetch('http://localhost:3000/leerExpedientes')
             .then(response => response.json())
             .then(data => {
-                setExpedientes(data.expedientes)
+                const exp = convertirExpedientes(data.expedientes)
+                setExpedientes(exp)
                 setCargando(false)
             })
             .catch(error => {
@@ -67,8 +85,8 @@ function Expedientes(){
                         renderItem={(exp) => (
                             <List.Item>
                                 <ExpedienteCard 
-                                    idExpedienteInterno={exp.id_expediente_interno} 
-                                    causaPenal={exp.causa_penal}
+                                    idExpedienteInterno={exp.idExpedienteInterno} 
+                                    causaPenal={exp.causaPenal}
                                     menoresVictimas={exp.menoresVictimas}
                                     delito={exp.delito}
                                     fechaHechoVictimizante={exp.fechaHechoVictimizante}
