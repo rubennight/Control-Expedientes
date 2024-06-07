@@ -38,14 +38,14 @@ function Dashboard() {
 
     return(
     <Layout style={{ minHeight: height }}>
-        <Sider trigger={null} collapsible collapsed={collapsed} theme='light' style={{background: '#3AB1BB'}}>
+        <Sider trigger={null} collapsible collapsed={collapsed} theme='dark' style={{background: '#334257'}}>
           <Menu
-            theme="light"
+            theme="dark"
             mode="inline"
             defaultSelectedKeys={['nav1']}
             selectedKeys={[selectedMenu]}
             onClick={({ key }) => handleMenuClick(key)}
-            style={{background: '#3AB1BB'}}
+            style={{background: '#334257'}}
           >
             <Menu.Item key={"menu"} icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)}>
             
@@ -62,14 +62,14 @@ function Dashboard() {
             </Menu.Item>
           </Menu>
         </Sider>
-        <Layout>
+        <Layout style={{ background: '#FFFFFF'}}>
           <Content
             style={{
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
               borderRadius: 10,
-              background: '#ECEEE8'
+              background: 'linear-gradient(135deg, #FFFFFF, #F0F0F0)'
             }}
           >
             {renderContent()}

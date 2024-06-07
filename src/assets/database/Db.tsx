@@ -61,6 +61,13 @@ app.get('/leerVictimasIndirectas', (req, res) => {
     res.json({ victimasIndirectas })
 })
 
+app.get('/leerVictimasIndirectasPorExpediente', (req, res) => {
+    const idExpedienteInterno = req.query.idExpedienteInterno;
+    const query = 'SELECT * FROM victima_indirecta WHERE id_expediente_interno = ?';
+    const victimasIndirectas = db.prepare(query).all(idExpedienteInterno);
+    res.json({ victimasIndirectas })
+})
+
 app.listen(port, () => {
     console.log(`App escuchando a través del puerto: ${port}`)
 })
