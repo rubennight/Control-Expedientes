@@ -1,12 +1,21 @@
-import { Button, Card, Descriptions, List, message } from "antd";
+import { Button, Card, Descriptions, Flex, Input, List, Modal, Select, message } from "antd";
 import React from 'react'
 
 const ExpedienteCard = (expediente: Expediente) => {
     const [victimasDirectas, setVictimasDirectas] = React.useState<VictimaDirecta[]>([]);
     const [victimasIndirectas, setVictimasIndirectas] = React.useState<VictimaIndirecta[]>([]);
+    const [modalAbierto, setModalAbierto] = React.useState(false);
 
     const width = window.innerWidth;
     const idExpediente = expediente.idExpedienteInterno;
+
+    const cancelar = () => {
+        setModalAbierto(false);
+    }
+
+    const abrirModal = () => {
+        setModalAbierto(true);
+    }
 
     const convertirVictimasDirectas = (data: any): VictimaDirecta[] => {
         const victimasD: VictimaDirecta[] = data.map((d: any) => ({
@@ -123,8 +132,8 @@ const ExpedienteCard = (expediente: Expediente) => {
     }, [])
     
     return(
-        <div style={{ flex: 1, display: 'flex', width: '100%' }}>
-            <div style={{ flex: 1, marginRight: 10 }}>
+        <div>
+            <div style={{ flex: 1 }}>
                 <Card
                     id="expedienteCard"
                     size="small"
@@ -143,17 +152,80 @@ const ExpedienteCard = (expediente: Expediente) => {
                         <Descriptions.Item label="Calidad de Victima">{calidadDeVictima(expediente.calidadVictima)}</Descriptions.Item>
                         <Descriptions.Item label="Fecha del Hecho Victimizante">{expediente.fechaHechoVictimizante}</Descriptions.Item>
                     </Descriptions>
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between'}}>
-                        <Button>Editar</Button>
-                        <Button>Archivar</Button>                        
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'space-evenly'}}>
+                        <Button type="text" onClick={abrirModal}>Editar</Button>
+                        <Button type="text">Archivar</Button>               
+                        <Modal title={`Editar expediente ` + expediente.idExpedienteInterno} open={modalAbierto} onCancel={cancelar}>
+                            <div style={{ flex: 1, display: 'flex', justifyContent: 'space-evenly' }}>
+                                <Flex vertical>
+                                    <p>ID del Expediente</p>
+                                    <Input variant="filled" placeholder={expediente.idExpedienteInterno} />
+                                    <p>Ministerio Público</p>
+                                    <Input variant="filled" placeholder={expediente.mpResponsable} />
+                                    <p>Fecha del Hecho Victimizante</p>
+                                    <Input variant="filled" placeholder={expediente.fechaHechoVictimizante} />
+                                    <p>Fecha de Entrega</p>
+                                    <Input variant="filled" placeholder={expediente.fechaEntrega} />
+                                    <p>Fud</p>
+                                    <Select
+                                        defaultValue={tieneFud(expediente.fud)}
+                                        options={[
+                                            {
+                                                value: 0,
+                                                label: 'No'
+                                            },
+                                            {
+                                                value: 1,
+                                                label: 'Si'
+                                            }
+                                        ]}
+                                    />
+                                </Flex>
+                                <Flex vertical>
+                                    <p>Causa Penal/Carpeta de Investigación</p>
+                                    <Input variant="filled" placeholder={expediente.causaPenal} />
+                                    <p>Distrito Judicial</p>
+                                    <Input variant="filled" placeholder={expediente.distritoJudicial} />
+                                    <p>Delito</p>
+                                    <Input variant="filled" placeholder={expediente.delito} />
+                                    <p>Menor de Edad</p>
+                                    <Select
+                                        defaultValue={menoresVictimas(expediente.menoresVictimas)}
+                                        options={[
+                                            {
+                                                value: 0,
+                                                label: 'No'
+                                            },
+                                            {
+                                                value: 1,
+                                                label: 'Si'
+                                            }
+                                        ]}
+                                    />
+                                    <p>Calidad Victima</p>
+                                    <Select 
+                                        defaultValue={calidadDeVictima(expediente.calidadVictima)}
+                                        options={[
+                                            {
+                                                value: 0,
+                                                label: 'No'
+                                            },
+                                            {
+                                                value: 1,
+                                                label: 'Si'
+                                            }
+                                        ]}
+                                    />
+                                </Flex>                                
+                            </div>
+                        </Modal>
                     </div>
                 </Card>                
             </div>
-            <div style={{ width: width * 0.3 }}>
+            <div style={{ flex: 1, display: 'flex' }}>
                 <Card
                     size="small"
                     title="Victimas Directas"
-                    style={{ marginBottom: 10 }}
                 >
                     <List
                         dataSource={victimasDirectas}
