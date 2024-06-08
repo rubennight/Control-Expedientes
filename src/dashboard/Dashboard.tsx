@@ -14,6 +14,7 @@ import React from 'react';
 import Home from './pages/Home';
 import SubMenu from 'antd/es/menu/SubMenu';
 import Expedientes from './pages/Expedientes';
+import Personas from './pages/Personas';
 
 function Dashboard() {
     const [collapsed, setCollapsed] = React.useState(true);
@@ -30,7 +31,8 @@ function Dashboard() {
           return <div><Home /></div>;
         case 'buscarExp':
           return <div><Expedientes /></div>
-        
+        case 'personas':
+          return <div><Personas /></div>
         default:
           return null;
       }
@@ -57,7 +59,7 @@ function Dashboard() {
               <Menu.Item key="buscarExp" icon={<FileSearchOutlined />}>Buscar Expedientes</Menu.Item>
               <Menu.Item key="nuevoExp" icon={<FileAddOutlined />}>Agregar Expediente</Menu.Item>
             </SubMenu>
-            <Menu.Item key="nav3" icon={<UserOutlined />}>
+            <Menu.Item key="personas" icon={<UserOutlined />}>
               Personas
             </Menu.Item>
           </Menu>
