@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 const port = 3000
 
 const cors = require('cors')
@@ -8,6 +9,46 @@ const Database = require('better-sqlite3')
 const db = new Database('control_expedientes')
 
 app.use(cors())
+
+app.post('/actualizarExpediente', (req, res) => {
+    const expediente = req.body;
+    console.log(expediente);
+    const query = `
+            UPDATE expediente SET
+                causa_penal = ?,
+                menores_victimas = ?,
+                delito = ?,
+                fecha_hecho_victimizante = ?,
+                fecha_entrega = ?,
+                mp_responsable = ?,
+                distrito_judicial = ?,
+                apoyos_recibidos = ?,
+                calidad_victima = ?,
+                fud = ?
+            WHERE id_expediente_interno = ?
+        `;
+        const stmt = db.prepare(query);
+        try {
+            stmt.run(
+                expediente.causaPenal,
+                expediente.menoresVictimas,
+                expediente.delito,
+                expediente.fechaHechoVictimizante,
+                expediente.fechaEntrega,
+                expediente.mpResponsable,
+                expediente.distritoJudicial,
+                expediente.apoyosRecibidos,
+                expediente.calidadVictima,
+                expediente.fud,
+                expediente.idExpedienteInterno
+            );            
+            res.status(200).send('Correcto')
+        } catch (error) {
+            console.error('Error actualizando correctamente');
+            res.status(500).send('Hubo un error al actualizar el expediente');
+        }
+
+})
 
 app.post('/agregarPendiente', (pendiente) => {
     const query = `

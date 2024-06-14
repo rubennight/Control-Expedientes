@@ -5,6 +5,18 @@ const ExpedienteCard = (expediente: Expediente) => {
     const [victimasDirectas, setVictimasDirectas] = React.useState<VictimaDirecta[]>([]);
     const [victimasIndirectas, setVictimasIndirectas] = React.useState<VictimaIndirecta[]>([]);
     const [modalAbierto, setModalAbierto] = React.useState(false);
+    const [expedienteEditado, setExpedienteEditado] = React.useState({
+        idExpedienteInterno: expediente.idExpedienteInterno,
+        mpResponsable: expediente.mpResponsable,
+        fechaHechoVictimizante: expediente.fechaHechoVictimizante,
+        fechaEntrega: expediente.fechaEntrega,
+        fud: expediente.fud,
+        causaPenal: expediente.causaPenal,
+        distritoJudicial: expediente.distritoJudicial,
+        delito: expediente.delito,
+        menoresVictimas: expediente.menoresVictimas,
+        calidadVictima: expediente.calidadVictima
+    });
 
     const idExpediente = expediente.idExpedienteInterno;
 
@@ -12,8 +24,48 @@ const ExpedienteCard = (expediente: Expediente) => {
         setModalAbierto(false);
     }
 
+    const manejarCambioEnInput = (e: any) => {
+        const { name, value } = e.target;
+        setExpedienteEditado(prevValues => ({
+            ...prevValues,
+            [name]: value
+        }));
+    }
+
+    const manejarSelectCambio = (name: any, value: any) => {
+        setExpedienteEditado(prevValues => ({
+            ...prevValues,
+            [name]: value
+        }))
+    }
+
     const abrirModal = () => {
         setModalAbierto(true);
+    }
+
+    const manejarEnvioDeActualizacion = async (e: any) => {
+        e.preventDefault();
+        console.log(expedienteEditado);
+        try{
+            const response = await fetch('http://localhost:3000/actualizarExpediente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(expedienteEditado)
+            })
+
+            if(!response.ok){
+                throw new Error('Error al actualizar el expediente');
+                message.error('Error al actualizar expediente');
+            }
+
+            const data = await response.text();
+            console.log('Expediente actualizado:', data);
+            message.success('Expediente actualizado correctamente')
+        } catch (error) {
+            console.error('Error actualizando el expediente:', error);
+        }
     }
 
     const convertirVictimasDirectas = (data: any): VictimaDirecta[] => {
@@ -154,20 +206,50 @@ const ExpedienteCard = (expediente: Expediente) => {
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'space-evenly'}}>
                         <Button type="text" onClick={abrirModal}>Editar</Button>
                         <Button type="text">Archivar</Button>               
-                        <Modal title={`Editar expediente ` + expediente.idExpedienteInterno} open={modalAbierto} onCancel={cancelar}>
+                        <Modal 
+                            title={`Editar expediente ` + expediente.idExpedienteInterno} 
+                            open={modalAbierto} 
+                            onCancel={cancelar}
+                            onOk={manejarEnvioDeActualizacion}
+                            >
                             <div style={{ flex: 1, display: 'flex', justifyContent: 'space-evenly' }}>
                                 <Flex vertical>
                                     <p>ID del Expediente</p>
-                                    <Input variant="filled" placeholder={expediente.idExpedienteInterno} />
+                                    <Input 
+                                        name="idExpedienteInterno" 
+                                        variant="filled" 
+                                        placeholder={expediente.idExpedienteInterno} 
+                                        value={expedienteEditado.idExpedienteInterno} 
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Ministerio Público</p>
-                                    <Input variant="filled" placeholder={expediente.mpResponsable} />
+                                    <Input 
+                                        name="mpResponsable" 
+                                        variant="filled" 
+                                        placeholder={expediente.mpResponsable}
+                                        value={expedienteEditado.mpResponsable}
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Fecha del Hecho Victimizante</p>
-                                    <Input variant="filled" placeholder={expediente.fechaHechoVictimizante} />
+                                    <Input 
+                                        name="fechaHechoVictimizante" 
+                                        variant="filled" 
+                                        placeholder={expediente.fechaHechoVictimizante} 
+                                        value={expedienteEditado.fechaHechoVictimizante} 
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Fecha de Entrega</p>
-                                    <Input variant="filled" placeholder={expediente.fechaEntrega} />
+                                    <Input 
+                                        name="fechaEntrega" 
+                                        variant="filled" 
+                                        placeholder={expediente.fechaEntrega} 
+                                        value={expedienteEditado.fechaEntrega}
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Fud</p>
                                     <Select
                                         defaultValue={tieneFud(expediente.fud)}
+                                        onChange={(value) => manejarSelectCambio('fud', value)}
                                         options={[
                                             {
                                                 value: 0,
@@ -182,13 +264,32 @@ const ExpedienteCard = (expediente: Expediente) => {
                                 </Flex>
                                 <Flex vertical>
                                     <p>Causa Penal/Carpeta de Investigación</p>
-                                    <Input variant="filled" placeholder={expediente.causaPenal} />
+                                    <Input 
+                                        name="causaPenal" 
+                                        variant="filled" 
+                                        placeholder={expediente.causaPenal} 
+                                        value={expedienteEditado.causaPenal}
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Distrito Judicial</p>
-                                    <Input variant="filled" placeholder={expediente.distritoJudicial} />
+                                    <Input 
+                                        name="distritoJudicial" 
+                                        variant="filled" 
+                                        placeholder={expediente.distritoJudicial} 
+                                        value={expedienteEditado.distritoJudicial} 
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Delito</p>
-                                    <Input variant="filled" placeholder={expediente.delito} />
+                                    <Input 
+                                        name="fechaHechoVictimizante" 
+                                        variant="filled" 
+                                        placeholder={expediente.delito} 
+                                        value={expedienteEditado.delito} 
+                                        onChange={manejarCambioEnInput}
+                                        />
                                     <p>Menor de Edad</p>
                                     <Select
+                                        onChange={(value) => manejarSelectCambio('menoresVictimas', value)}
                                         defaultValue={menoresVictimas(expediente.menoresVictimas)}
                                         options={[
                                             {
@@ -203,6 +304,7 @@ const ExpedienteCard = (expediente: Expediente) => {
                                     />
                                     <p>Calidad Victima</p>
                                     <Select 
+                                        onChange={(value) => manejarSelectCambio('calidadVictima', value)}
                                         defaultValue={calidadDeVictima(expediente.calidadVictima)}
                                         options={[
                                             {
