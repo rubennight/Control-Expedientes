@@ -6,7 +6,6 @@ const ExpedienteCard = (expediente: Expediente) => {
     const [victimasIndirectas, setVictimasIndirectas] = React.useState<VictimaIndirecta[]>([]);
     const [modalAbierto, setModalAbierto] = React.useState(false);
 
-    const width = window.innerWidth;
     const idExpediente = expediente.idExpedienteInterno;
 
     const cancelar = () => {

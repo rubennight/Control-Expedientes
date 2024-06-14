@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import SubMenu from 'antd/es/menu/SubMenu';
 import Expedientes from './pages/Expedientes';
 import Personas from './pages/Personas';
+import AgregarExpediente from '../components/AgregarExpediente';
 
 function Dashboard() {
     const [collapsed, setCollapsed] = React.useState(true);
@@ -31,6 +32,8 @@ function Dashboard() {
           return <div><Home /></div>;
         case 'buscarExp':
           return <div><Expedientes /></div>
+        case 'nuevoExp':
+          return <div><AgregarExpediente /></div>
         case 'personas':
           return <div><Personas /></div>
         default:
